@@ -66,23 +66,30 @@ export default function GuestsTab() {
     URL.revokeObjectURL(url)
   }
 
-  async function guestAction(action: 'reset-password' | 'delete', guest: Profile) {
+  async function guestAction(action: 'reset-password' | 'delete' | 'set-admin', guest: Profile) {
     let password: string | undefined
+    let isAdmin: boolean | undefined
     if (action === 'reset-password') {
       const entered = window.prompt(`New password for ${guest.full_name} (at least 6 characters):`)
       if (!entered) return
       password = entered
+    } else if (action === 'set-admin') {
+      const make = !guest.is_admin
+      if (!window.confirm(make ? `Make ${guest.full_name} an admin? They will be able to see every guest and approve buses.` : `Remove admin access from ${guest.full_name}?`)) return
+      isAdmin = make
     } else if (!window.confirm(`Delete ${guest.full_name} and their bus request? This cannot be undone.`)) {
       return
     }
     const res = await fetch('/api/admin/guest', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
-      body: JSON.stringify({ action, userId: guest.id, password }),
+      body: JSON.stringify({ action, userId: guest.id, password, isAdmin }),
     })
     const data = await res.json().catch(() => ({}))
-    setMessage(res.ok ? (action === 'delete' ? 'Guest deleted.' : `Password reset for ${guest.full_name}.`) : data.error || 'Failed.')
-    if (res.ok && action === 'delete') load()
+    const done =
+      action === 'delete' ? 'Guest deleted.' : action === 'set-admin' ? `${guest.full_name} is ${isAdmin ? 'now an admin' : 'no longer an admin'}.` : `Password reset for ${guest.full_name}.`
+    setMessage(res.ok ? done : data.error || 'Failed.')
+    if (res.ok && action !== 'reset-password') load()
   }
 
   const male = guests.filter((g) => g.gender === 'male').length
@@ -132,6 +139,7 @@ export default function GuestsTab() {
               <tr key={g.id} className="border-t border-cream/10 align-top">
                 <td className="px-4 py-3">
                   {g.full_name}
+                  {g.is_admin && <span className="label ml-2 rounded-full border border-aqua px-2 py-0.5 text-[0.55rem] text-aqua">Admin</span>}
                   <span className="block text-xs text-cream/50">@{g.username}</span>
                 </td>
                 <td className="px-4 py-3">{g.phone}</td>
@@ -139,10 +147,15 @@ export default function GuestsTab() {
                 <td className="px-4 py-3">{busFor(g.id) || '-'}</td>
                 <td className="px-4 py-3 text-cream/70">{g.created_at.slice(0, 10)}</td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-3 text-xs">
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
                     <button className="cursor-pointer underline underline-offset-4" onClick={() => guestAction('reset-password', g)}>
                       Reset password
                     </button>
+                    {g.id !== session?.user.id && (
+                      <button className="cursor-pointer underline underline-offset-4" onClick={() => guestAction('set-admin', g)}>
+                        {g.is_admin ? 'Remove admin' : 'Make admin'}
+                      </button>
+                    )}
                     {!g.is_admin && (
                       <button className="cursor-pointer text-aqua underline underline-offset-4" onClick={() => guestAction('delete', g)}>
                         Delete

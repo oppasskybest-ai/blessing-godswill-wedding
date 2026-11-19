@@ -8,7 +8,7 @@ function icsStamp(iso: string) {
 }
 
 /** Downloads an .ics file that opens in Apple, Google and Outlook calendars. No server needed. */
-export default function AddToCalendar({ variant = 'outline' }: { variant?: 'outline' | 'dark' | 'solid' }) {
+export default function AddToCalendar({ variant = 'outline', venue }: { variant?: 'outline' | 'dark' | 'solid'; venue?: string }) {
   function download() {
     const lines = [
       'BEGIN:VCALENDAR',
@@ -20,7 +20,7 @@ export default function AddToCalendar({ variant = 'outline' }: { variant?: 'outl
       `DTSTART:${icsStamp(EVENT.startISO)}`,
       `DTEND:${icsStamp(EVENT.endISO)}`,
       "SUMMARY:Blessing & Godswill's Traditional Marriage",
-      `LOCATION:${EVENT.venueName}\\, ${EVENT.venueArea}`,
+      `LOCATION:${(venue ?? `${EVENT.venueName}, ${EVENT.venueArea}`).replace(/,/g, '\\,')}`,
       'DESCRIPTION:Arrivals from 12:00 PM. Marriage ceremony at 1:00 PM.',
       'END:VEVENT',
       'END:VCALENDAR',

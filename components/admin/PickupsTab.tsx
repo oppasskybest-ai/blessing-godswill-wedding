@@ -3,13 +3,18 @@
 import { useCallback, useEffect, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { TextField } from '@/components/ui/Field'
+import MapPreview from '@/components/admin/MapPreview'
+import { extractUrl } from '@/lib/maps'
+import { adminPost } from '@/lib/adminApi'
+import { useAuth } from '@/lib/auth/AuthProvider'
 import { getSupabase } from '@/lib/supabase/client'
 import type { PickupContact, PickupPoint } from '@/lib/types'
 
-type Draft = PickupPoint & { contact_name: string; contact_phone: string }
+type Draft = PickupPoint & { contact_name: string; contact_phone: string; seats: string }
 
 /** Edit time, capacity, map pin, contact person and phone for each takeoff point. */
 export default function PickupsTab() {
+  const { session } = useAuth()
   const [drafts, setDrafts] = useState<Draft[]>([])
   const [message, setMessage] = useState('')
   const [savingId, setSavingId] = useState('')
@@ -23,6 +28,7 @@ export default function PickupsTab() {
         ...pt,
         contact_name: contacts.get(pt.id)?.contact_name ?? '',
         contact_phone: contacts.get(pt.id)?.phone ?? '',
+        seats: String(pt.capacity),
       }))
     )
   }, [])
@@ -36,13 +42,19 @@ export default function PickupsTab() {
   async function save(d: Draft) {
     setSavingId(d.id)
     setMessage('')
-    const sb = getSupabase()
-    const a = await sb
-      .from('pickup_points')
-      .update({ pickup_time: d.pickup_time, capacity: d.capacity, maps_url: d.maps_url || null, address: d.address, name: d.name })
-      .eq('id', d.id)
-    const b = await sb.from('pickup_contacts').upsert({ pickup_id: d.id, contact_name: d.contact_name, phone: d.contact_phone })
-    setMessage(a.error || b.error ? `Could not save ${d.name}.` : `${d.name} saved.`)
+    const error = await adminPost('/api/admin/save', session?.access_token, {
+      kind: 'pickup',
+      id: d.id,
+      name: d.name,
+      address: d.address,
+      pickup_time: d.pickup_time,
+      capacity: d.seats.trim() === '' ? NaN : Number(d.seats),
+      maps_url: extractUrl(d.maps_url ?? ''),
+      contact_name: d.contact_name,
+      contact_phone: d.contact_phone,
+    })
+    setMessage(error ? `Could not save ${d.name}: ${error}` : `${d.name} saved.`)
+    if (!error) load()
     setSavingId('')
   }
 
@@ -65,19 +77,19 @@ export default function PickupsTab() {
               <TextField label="Pickup time" value={d.pickup_time} onChange={(e) => patch(d.id, { pickup_time: e.target.value })} />
               <TextField
                 label="Seats (capacity)"
-                type="number"
-                min={0}
-                value={String(d.capacity)}
-                onChange={(e) => patch(d.id, { capacity: Math.max(0, Number(e.target.value) || 0) })}
+                inputMode="numeric"
+                value={d.seats}
+                onChange={(e) => patch(d.id, { seats: e.target.value.replace(/\D/g, '') })}
               />
             </div>
             <TextField
               label="Google Maps link"
               optional
-              hint="Leave empty to search by the address."
+              hint="Paste the Google Maps link (or the iframe code from Share > Embed a map). Leave empty to search by the address."
               value={d.maps_url ?? ''}
               onChange={(e) => patch(d.id, { maps_url: e.target.value })}
             />
+            <MapPreview link={d.maps_url ?? ''} fallbackQuery={`${d.address}, ${d.name}, Akwa Ibom, Nigeria`} title={d.name} />
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField label="Contact person" value={d.contact_name} onChange={(e) => patch(d.id, { contact_name: e.target.value })} />
               <TextField label="Contact phone" type="tel" value={d.contact_phone} onChange={(e) => patch(d.id, { contact_phone: e.target.value })} />

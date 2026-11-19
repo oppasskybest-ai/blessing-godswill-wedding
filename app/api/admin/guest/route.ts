@@ -4,13 +4,14 @@ import { getSupabaseAdmin, requireAdmin } from '@/lib/supabase/admin'
 /**
  * Admin-only actions that need the service role:
  *   { action: 'reset-password', userId, password }   (guests have no email recovery)
+ *   { action: 'set-admin', userId, isAdmin }          (make / remove an admin; not yourself)
  *   { action: 'delete', userId }                     (removes the login AND, via cascade, their data)
  */
 export async function POST(req: Request) {
   const adminId = await requireAdmin(req)
   if (!adminId) return NextResponse.json({ error: 'Not allowed.' }, { status: 403 })
 
-  let body: { action?: string; userId?: string; password?: string }
+  let body: { action?: string; userId?: string; password?: string; isAdmin?: boolean }
   try {
     body = await req.json()
   } catch {
@@ -29,6 +30,13 @@ export async function POST(req: Request) {
     }
     const { error } = await admin.auth.admin.updateUserById(userId, { password })
     if (error) return NextResponse.json({ error: 'Could not reset the password.' }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
+
+  if (body.action === 'set-admin') {
+    if (userId === adminId) return NextResponse.json({ error: 'You cannot change your own admin access.' }, { status: 400 })
+    const { error } = await admin.from('profiles').update({ is_admin: body.isAdmin === true }).eq('id', userId)
+    if (error) return NextResponse.json({ error: 'Could not change admin access.' }, { status: 500 })
     return NextResponse.json({ ok: true })
   }
 

@@ -30,7 +30,12 @@ Botanical art is in `public/botanical/` (`branch`, `corner`, `rose`). It is orig
    - **Authentication -> Sign In / Providers**: turn **off** "Allow new users to sign up" (accounts are created only by `/api/register`). Email confirmation can stay on; the server creates accounts as already confirmed.
 3. Copy `.env.local.example` to `.env.local` and fill in the Supabase URL, anon key and service-role key.
 4. `npm run dev`, open http://localhost:3000, register your own account.
-5. Make yourself admin (SQL Editor): `update public.profiles set is_admin = true where username = 'your-username';`
+5. **Already ran schema.sql earlier?** Also run `supabase/update-02-venue-settings.sql` once (adds the editable venue + footer contact).
+6. First admin. Register on the site, then either:
+   - set `ADMIN_SETUP_CODE` (long random text) in `.env.local` / Vercel, restart, log in and open `/admin`: a "Become admin" box appears and accepts the code. It switches itself off once any admin exists; or
+   - run in the SQL Editor: `update public.profiles set is_admin = true where username = 'your-username';`
+   After that, admins are added or removed in **Admin -> Guests -> Make admin** (no SQL).
+   A button that makes anyone admin was deliberately NOT built: it would let any guest take over the site.
 6. Replace the placeholders: search the project for `TODO(owner)`.
 7. Deploy on Vercel, add the same environment variables, then connect the domain.
 
@@ -39,6 +44,7 @@ Botanical art is in `public/botanical/` (`branch`, `corner`, `rose`). It is orig
 | What | Where |
 | --- | --- |
 | Exact venue map pin | `VENUE_MAPS_URL` in `lib/config/site.ts` |
+| Event venue, map pin, footer contact | Admin -> Venue (with live map preview) |
 | Pickup contact names and phone numbers | Admin -> Pickups, or `supabase/seed.sql` |
 | Pickup times and seats per bus | Admin -> Pickups, or `supabase/seed.sql` |
 | General contact number | `GENERAL_CONTACT` in `lib/config/site.ts` |
@@ -79,6 +85,6 @@ lib/hooks/      scroll helpers (in view, scroll progress)
 public/images/  the 40 named photo slots + README.md
 public/botanical/  line-art flowers
 lib/supabase/   browser client and server-only admin client
-supabase/       schema.sql, seed.sql
+supabase/       schema.sql, seed.sql, update-02-venue-settings.sql
 docs/           PROJECT_NOTES.md
 ```

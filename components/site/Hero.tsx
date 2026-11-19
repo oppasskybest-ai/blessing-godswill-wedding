@@ -14,7 +14,7 @@ const SLIDE_MS = 6500
  * Full-screen opening: photos crossfade with a slow zoom, the names rise in line by line,
  * and an arch portrait floats on the right. Slide images are hero-slide-1..3.jpg.
  */
-export default function Hero() {
+export default function Hero({ venueArea }: { venueArea: string }) {
   const slides = IMG.heroSlides
   const [active, setActive] = useState(0)
   const [previous, setPrevious] = useState<number | null>(null)
@@ -51,7 +51,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,transparent_0%,rgb(46_63_45/0.55)_100%)]" />
       </div>
 
-      <Botanical variant="branch" className="absolute -right-10 top-16 hidden w-[36rem] text-sage/45 md:block" />
+      <Botanical variant="branch" className="absolute -right-10 top-16 hidden w-[24rem] text-sage/35 md:block lg:w-[36rem] lg:text-sage/45" />
 
       <div
         className={`mx-auto grid min-h-[100svh] max-w-7xl items-center gap-10 px-5 pb-28 pt-32 sm:px-8 lg:grid-cols-[1.35fr_1fr] ${ready ? 'in' : ''}`}
@@ -63,7 +63,7 @@ export default function Hero() {
 
           <h1 className="mt-5">
             <span className="line-mask">
-              <span className="line-inner heading block text-[clamp(3.2rem,10vw,7.5rem)] text-cream" style={{ transitionDelay: '350ms' }}>
+              <span className="line-inner heading block text-[clamp(2.6rem,12vw,7.5rem)] text-cream" style={{ transitionDelay: '350ms' }}>
                 Blessing
               </span>
             </span>
@@ -73,7 +73,7 @@ export default function Hero() {
               </span>
             </span>
             <span className="line-mask">
-              <span className="line-inner heading block text-[clamp(3.2rem,10vw,7.5rem)] text-cream sm:pl-14" style={{ transitionDelay: '650ms' }}>
+              <span className="line-inner heading block text-[clamp(2.6rem,12vw,7.5rem)] text-cream sm:pl-14" style={{ transitionDelay: '650ms' }}>
                 Godswill
               </span>
             </span>
@@ -85,7 +85,7 @@ export default function Hero() {
 
           <div className="fade-in mt-5 flex flex-col gap-3 sm:flex-row sm:gap-8" style={{ transitionDelay: '1000ms' }}>
             <p className="label border-cream/40 text-lg text-cream sm:border-r sm:pr-8">{EVENT.dateShort}</p>
-            <p className="label text-lg text-cream">{EVENT.venueArea}</p>
+            <p className="label text-lg text-cream">{venueArea}</p>
           </div>
 
           <div className="fade-in mt-10" style={{ transitionDelay: '1150ms' }}>

@@ -2,7 +2,6 @@ import PhotoBand from '@/components/site/PhotoBand'
 import Reveal from '@/components/site/Reveal'
 import Button from '@/components/ui/Button'
 import { IMG } from '@/lib/config/images'
-import { EVENT } from '@/lib/config/site'
 
 /** Band 1: after Our Journey. */
 export function QuoteBand() {
@@ -17,13 +16,13 @@ export function QuoteBand() {
 }
 
 /** Band 2: before the FAQs. */
-export function SaveTheDateBand() {
+export function SaveTheDateBand({ venueArea }: { venueArea: string }) {
   return (
     <PhotoBand slot={IMG.bands[1]}>
       <Reveal variant="scale">
         <p className="script text-5xl text-cream sm:text-8xl">Save the date</p>
-        <p className="heading mt-3 text-4xl tracking-wider text-cream sm:text-7xl">23 · 12 · 2026</p>
-        <p className="label mt-5 text-cream/90">{EVENT.venueArea}</p>
+        <p className="heading mt-3 whitespace-nowrap text-[clamp(1.7rem,8.5vw,4.5rem)] tracking-wider text-cream">23 · 12 · 2026</p>
+        <p className="label mt-5 text-cream/90">{venueArea}</p>
       </Reveal>
     </PhotoBand>
   )

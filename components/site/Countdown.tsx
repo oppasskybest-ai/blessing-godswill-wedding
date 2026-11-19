@@ -39,13 +39,13 @@ export default function Countdown() {
   ]
 
   return (
-    <div role="timer" aria-label="Countdown to the ceremony" className="flex gap-2.5 sm:gap-4">
+    <div role="timer" aria-label="Countdown to the ceremony" className="grid max-w-md grid-cols-4 gap-2 sm:flex sm:max-w-none sm:gap-4">
       {cells.map(([label, value]) => (
-        <div key={label} className="glass-tile min-w-[4.2rem] rounded-2xl px-3 py-3 text-center sm:min-w-24 sm:px-4 sm:py-4">
+        <div key={label} className="glass-tile min-w-0 rounded-2xl px-1 py-3 text-center sm:min-w-24 sm:px-4 sm:py-4">
           <div className="heading text-3xl tabular-nums text-cream sm:text-5xl">
             {now === null ? '--' : String(value).padStart(2, '0')}
           </div>
-          <div className="label mt-1 text-[0.6rem] text-cream/70 sm:text-[0.65rem]">{label}</div>
+          <div className="label mt-1 text-[0.5rem] tracking-[0.12em] text-cream/70 sm:text-[0.65rem] sm:tracking-[0.2em]">{label}</div>
         </div>
       ))}
     </div>

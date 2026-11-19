@@ -166,3 +166,18 @@ Not done / next:
 - Review the redesign in a browser and tune (likely: image focus positions, spacing, mobile).
 - Real photos: rename to the slot names (see `public/images/README.md`).
 - Supabase project, then the "First checks" list above.
+
+---
+
+## Session 3 log (2026-11-19): owner feedback after running the redesign
+
+The owner ran the redesign in Codespaces and with Supabase connected: "looks good, a few touches".
+
+| Request | Status | Notes |
+| --- | --- | --- |
+| Admin pickup edits (numbers) would not save | FIXED (untested) | Saves now go through `/api/admin/save` (server, service role) and show the real error. Seats box no longer snaps to 0 while typing. Root cause of the old failure was not visible from screenshots. |
+| Real event venue not editable | DONE (untested) | New table `site_settings`, Admin -> Venue tab (venue name, area, map link, footer contact) with live map preview. The home page reads it (updates within ~60 s). Needs `supabase/update-02-venue-settings.sql` run once. |
+| Map preview in admin | DONE (untested) | Pickups and Venue tabs. Accepts a normal link, an embed iframe snippet, or empty (address search). Short maps.app.goo.gl links cannot be previewed exactly. |
+| Make admin from the site | DONE (untested) | Admin -> Guests -> Make / Remove admin. First admin: one-time `ADMIN_SETUP_CODE` claim box, or one SQL line. |
+| Footer credit | DONE | "Created & maintained by OJ" linking to opeyemijohn.vercel.app. |
+| Mobile / tablet fixes | DONE (unseen) | Countdown fits 320-375 px; save-the-date line scales; hero names clamp; nav switches to the menu button below 1280 px (it collided at 1024-1279); Wedding cards 1 / 2 / 3 columns; mobile menu scrolls on short screens. |

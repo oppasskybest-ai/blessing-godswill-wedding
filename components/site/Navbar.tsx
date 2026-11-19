@@ -47,7 +47,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="label min-h-11 cursor-pointer rounded-full border border-cream/40 px-4 lg:hidden"
+          className="label min-h-11 cursor-pointer rounded-full border border-cream/40 px-4 xl:hidden"
           aria-expanded={open}
           aria-controls="main-menu"
           onClick={() => setOpen((v) => !v)}
@@ -57,15 +57,15 @@ export default function Navbar() {
 
         <div
           id="main-menu"
-          className={`${open ? 'flex' : 'hidden'} absolute left-0 right-0 top-full flex-col gap-1 border-b border-cream/15 bg-forest/95 px-4 pb-4 pt-2 backdrop-blur-xl lg:static lg:flex lg:flex-row lg:items-center lg:gap-6 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none`}
+          className={`${open ? 'flex' : 'hidden'} absolute left-0 right-0 top-full max-h-[calc(100svh-4rem)] flex-col gap-1 overflow-y-auto border-b border-cream/15 bg-forest/95 px-4 pb-4 pt-2 backdrop-blur-xl xl:static xl:flex xl:flex-row xl:items-center xl:gap-6 xl:border-0 xl:bg-transparent xl:p-0 xl:backdrop-blur-none`}
         >
           {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} onClick={close} className="label py-2 text-cream/80 transition-colors hover:text-cream lg:py-0">
+            <Link key={l.href} href={l.href} onClick={close} className="label py-2 text-cream/80 transition-colors hover:text-cream xl:py-0">
               {l.label}
             </Link>
           ))}
 
-          <div className="mt-2 flex flex-wrap items-center gap-3 lg:mt-0">
+          <div className="mt-2 flex flex-wrap items-center gap-3 xl:mt-0">
             {loading ? null : session ? (
               <>
                 {isAdmin && (

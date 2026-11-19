@@ -2,9 +2,10 @@ import Botanical from '@/components/site/Botanical'
 import ParallaxBg from '@/components/site/ParallaxBg'
 import Button from '@/components/ui/Button'
 import { IMG } from '@/lib/config/images'
-import { EVENT, GENERAL_CONTACT, SITE } from '@/lib/config/site'
+import { EVENT, SITE } from '@/lib/config/site'
+import type { SiteSettings } from '@/lib/data/settings'
 
-export default function Footer() {
+export default function Footer({ settings }: { settings: SiteSettings }) {
   const shareText = encodeURIComponent(
     `You are invited to Blessing & Godswill's traditional marriage on ${EVENT.dateLabel}. Details and registration: ${SITE.url}`
   )
@@ -19,7 +20,7 @@ export default function Footer() {
           Blessing <span className="script text-4xl normal-case text-sage sm:text-6xl">and</span> Godswill
         </p>
         <p className="label mt-4 text-cream/80">{EVENT.dateLabel}</p>
-        <p className="mt-1 text-cream/70">{EVENT.venueArea}</p>
+        <p className="mt-1 text-cream/70">{settings.venue_area}</p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Button href={`https://wa.me/?text=${shareText}`} variant="outline">
@@ -32,10 +33,23 @@ export default function Footer() {
         </div>
 
         <p className="mt-10 text-sm text-cream/60">
-          Questions? {GENERAL_CONTACT.name}:{' '}
-          {/* TODO(owner): real general contact number (lib/config/site.ts) */}
-          <a href={`tel:${GENERAL_CONTACT.phone.replace(/\s/g, '')}`} className="underline underline-offset-4">
-            {GENERAL_CONTACT.phone}
+          Questions? {settings.contact_name}:{' '}
+          {/* Editable in Admin -> Venue */}
+          <a href={`tel:${settings.contact_phone.replace(/\s/g, '')}`} className="underline underline-offset-4">
+            {settings.contact_phone}
+          </a>
+        </p>
+
+        <p className="mt-10 border-t border-cream/15 pt-6 text-xs text-cream/50">
+          Created &amp; maintained by{' '}
+          <a
+            href="https://opeyemijohn.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Opeyemi John (opens his website)"
+            className="label font-semibold text-cream/80 underline underline-offset-4 hover:text-cream"
+          >
+            OJ
           </a>
         </p>
       </div>

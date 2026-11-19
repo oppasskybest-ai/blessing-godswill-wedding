@@ -4,7 +4,8 @@ import Reveal from '@/components/site/Reveal'
 import Button from '@/components/ui/Button'
 import Photo from '@/components/ui/Photo'
 import { IMG } from '@/lib/config/images'
-import { COLOR_SWATCHES, EVENT, VENUE_MAPS_URL } from '@/lib/config/site'
+import { COLOR_SWATCHES } from '@/lib/config/site'
+import { venueMapsUrl, type SiteSettings } from '@/lib/data/settings'
 
 const CARD =
   'glass-light group flex h-full flex-col overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-30px_rgba(46,63,45,0.5)] transition-transform duration-500 hover:-translate-y-2'
@@ -17,7 +18,7 @@ function CardImage({ slot }: { slot: (typeof IMG)['wedding']['venue'] }) {
   )
 }
 
-export default function Wedding() {
+export default function Wedding({ settings }: { settings: SiteSettings }) {
   return (
     <section id="wedding" className="sheet section-pad overflow-hidden bg-aqua text-forest">
       <Botanical variant="rose" className="absolute -right-10 top-10 hidden w-64 text-forest/20 lg:block" />
@@ -27,22 +28,22 @@ export default function Wedding() {
           <h2 className="heading text-center text-5xl sm:text-8xl">The Wedding</h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Reveal className="h-full">
             <article className={CARD}>
               <CardImage slot={IMG.wedding.venue} />
               <div className="flex flex-1 flex-col p-7">
                 <h3 className="label text-base">The venue</h3>
                 <p className="mt-4 text-lg">
-                  We&rsquo;re celebrating at {EVENT.venueName}, {EVENT.venueArea}.
+                  We&rsquo;re celebrating at {settings.venue_name}, {settings.venue_area}.
                 </p>
                 <p className="mt-2 text-sm text-forest/70">The ceremony is outdoors.</p>
                 <div className="mt-auto flex flex-wrap gap-3 pt-6">
                   {/* Opens Google Maps, or whichever maps app the guest's phone uses. */}
-                  <Button href={VENUE_MAPS_URL} variant="dark">
+                  <Button href={venueMapsUrl(settings)} variant="dark">
                     Click to get directions
                   </Button>
-                  <AddToCalendar variant="dark" />
+                  <AddToCalendar variant="dark" venue={`${settings.venue_name}, ${settings.venue_area}`} />
                 </div>
               </div>
             </article>
@@ -66,7 +67,7 @@ export default function Wedding() {
             </article>
           </Reveal>
 
-          <Reveal delay={240} className="h-full">
+          <Reveal delay={240} className="h-full sm:col-span-2 lg:col-span-1">
             <article className={CARD}>
               <CardImage slot={IMG.wedding.attire} />
               <div className="flex flex-1 flex-col p-7">
