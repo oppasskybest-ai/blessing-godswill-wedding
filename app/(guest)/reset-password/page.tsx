@@ -7,6 +7,7 @@ import NotConfigured from '@/components/site/NotConfigured'
 import PageShell from '@/components/site/PageShell'
 import RecoveryCodeBox from '@/components/site/RecoveryCodeBox'
 import Button from '@/components/ui/Button'
+import { IMG } from '@/lib/config/images'
 import { TextField } from '@/components/ui/Field'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 
@@ -48,7 +49,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <PageShell title="Reset password" intro="Enter your username and the recovery code you were given when you registered.">
+    <PageShell title="Reset password" image={IMG.loginSide} intro="Enter your username and the recovery code you were given when you registered.">
       {!isSupabaseConfigured ? (
         <NotConfigured />
       ) : (

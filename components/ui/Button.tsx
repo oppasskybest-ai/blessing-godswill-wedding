@@ -13,8 +13,9 @@ const VARIANTS: Record<Variant, string> = {
 }
 
 const BASE =
-  'label inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 min-h-11 transition-colors ' +
-  'disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-center'
+  'label inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 min-h-11 text-center cursor-pointer ' +
+  'transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.55)] active:translate-y-0 ' +
+  'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none'
 
 type LinkProps = { href: string; variant?: Variant; className?: string; children: ReactNode }
 type ActionProps = ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined; variant?: Variant }

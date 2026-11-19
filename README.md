@@ -7,12 +7,20 @@ Planning notes are in [`docs/PROJECT_NOTES.md`](docs/PROJECT_NOTES.md). What is 
 
 ## What the site does
 
-- Public one-page site: hero + countdown, Our Journey, The Wedding (venue directions, transport, attire), Takeoff Points, Schedule, FAQs.
+- Public one-page site, photo-led with motion: full-screen hero slideshow + countdown, Our Journey (arch portraits + gliding photo gallery), The Wedding (venue directions, transport, attire), Takeoff Points, Schedule timeline, FAQs, with full-width scrolling photo bands between sections.
 - Anyone can **register** (name + phone required; everything else optional) and **log in with a username and password**, no OTP.
 - A guest who forgets their password can **reset it themselves** with their username + the **recovery code** shown at registration (`/reset-password`). The admin can also reset it.
 - Guests can **request a bus seat** at one of four takeoff points. Requests are **pending** until the couple approves them. Only **after approval** does the guest see that point's contact person and phone number.
 - **Admin dashboard** (`/admin`): approve or decline bus seats (with capacity per bus), guest list with search and CSV export, edit takeoff points and contact numbers, upload event photos.
 - **Event Photos** page (`/photos`), empty until photos are uploaded.
+
+## Design and images
+
+Style: **cinematic editorial**. Forest green / cream / aqua palette, tall serif headings with script accents, photos behind and between sections, sections that slide over each other with rounded edges, and gentle motion (slideshow, parallax, gliding gallery, drawn-in botanical art). All motion switches off for visitors who prefer reduced motion.
+
+**Every picture is a named file in `public/images/`** (40 slots, currently copies of the two sample photos). To use real photos: rename each to the slot name and overwrite it. No code changes. The slot list with recommended sizes is in [`public/images/README.md`](public/images/README.md); the wiring (and per-photo crop focus) is `lib/config/images.ts`.
+
+Botanical art is in `public/botanical/` (`branch`, `corner`, `rose`). It is original line art, coloured with CSS, so change its colour with a text colour class on `<Botanical className="text-sage/60" />`.
 
 ## Setup
 
@@ -35,7 +43,7 @@ Planning notes are in [`docs/PROJECT_NOTES.md`](docs/PROJECT_NOTES.md). What is 
 | Pickup times and seats per bus | Admin -> Pickups, or `supabase/seed.sql` |
 | General contact number | `GENERAL_CONTACT` in `lib/config/site.ts` |
 | Registration deadline | `REGISTRATION_DEADLINE` in `lib/config/site.ts` |
-| Portrait photos | `PORTRAITS` in `lib/config/site.ts` (files go in `public/images/`) |
+| All photos (portraits, venue, bus, gallery...) | Rename to the slot names in `public/images/README.md` and overwrite the files |
 | Domain | `NEXT_PUBLIC_SITE_URL` in `.env.local` / Vercel |
 
 ## How login works (no OTP)
@@ -66,7 +74,10 @@ All data rules live in the database (`supabase/schema.sql`), not in the page cod
 ```
 app/            pages (public home, register, login, account, photos, admin) and API routes
 components/     site sections, admin tabs, small UI pieces
-lib/config/     site.ts (all public content and placeholders), validation.ts
+lib/config/     site.ts (all public content and placeholders), images.ts (image slots), validation.ts
+lib/hooks/      scroll helpers (in view, scroll progress)
+public/images/  the 40 named photo slots + README.md
+public/botanical/  line-art flowers
 lib/supabase/   browser client and server-only admin client
 supabase/       schema.sql, seed.sql
 docs/           PROJECT_NOTES.md

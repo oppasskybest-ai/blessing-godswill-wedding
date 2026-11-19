@@ -7,6 +7,7 @@ import PageShell from '@/components/site/PageShell'
 import NotConfigured from '@/components/site/NotConfigured'
 import RecoveryCodeBox from '@/components/site/RecoveryCodeBox'
 import Button from '@/components/ui/Button'
+import { IMG } from '@/lib/config/images'
 import { SelectField, TextAreaField, TextField } from '@/components/ui/Field'
 import { useAuth } from '@/lib/auth/AuthProvider'
 import { REGISTRATION_DEADLINE } from '@/lib/config/site'
@@ -87,6 +88,7 @@ export default function RegisterPage() {
   return (
     <PageShell
       title="Register"
+      image={IMG.registerSide}
       intro={`Everyone who plans to attend should register, so we can count you in${REGISTRATION_DEADLINE ? ` (please do so by ${REGISTRATION_DEADLINE})` : ''}. Only your name and phone number are required.`}
     >
       {!isSupabaseConfigured ? (

@@ -104,24 +104,21 @@ Updated with the owner's requirements from voice notes (transcripts 24-30 and th
 
 ## 5. Design direction
 
-**Keep the Canva identity** (guests have likely seen it):
-- Deep forest green (~#3E5240), warm cream (~#F3DBB8), sage (~#B3B09B), aquamarine blue (~#AFD3E0). Sample exact hex values from the Canva design.
-- Typography: tall, high-contrast display serif for headings; elegant script for accent words ("and", "Together", "of"); wide-tracked small caps sans for labels and body.
-- Botanical line illustrations as section dividers and corners.
-- Rounded "arch/pill" photo frames (as in the oval portraits).
+**Update (session 2):** the first front end was judged "too basic": no transitions, images too small and too few, plain rose, schedule text overlapping. Direction changed to **cinematic editorial**:
 
-**Structure (single scrolling page + guest area):**
-1. Hero with names, date, location, countdown, Register/RSVP button
-2. Our Journey (story + the three portraits)
-3. The Wedding (venue + "Click to get directions", transport, attire with swatches)
-4. Schedule (timeline)
-5. Takeoff Points (4 cards; phone/contact shown only to approved guests)
-6. FAQs (accordion)
-7. Event Photos (empty until the event)
-8. Register / Login (guest area: my details, bus status, approved contact)
-9. Footer (contacts, share)
+- Keep the Canva palette (forest `#3d513c`, cream `#f3dbb9`, sage `#afaf9b`, aqua `#b1d4e0`) and the serif + script + wide-tracked caps typography.
+- Photos everywhere: full-screen hero slideshow (slow zoom), full-width parallax photo bands, a gliding two-row gallery in Our Journey (16 photos), arch-shaped portraits that open on scroll, photo headers on the Wedding cards, photo backgrounds on Takeoff / FAQ / footer, side photos on Register / Log in.
+- Sections stack like sheets with big rounded tops. Frosted-glass cards. Scroll-progress line. Nav transparent over hero.
+- Schedule = vertical timeline (heading above it, never beside it) so text cannot overlap.
+- Botanicals: richer woodcut-style flowers, leaves and fern fronds (original art) that draw in on scroll; a stylised rose replaces the basic sprig.
+- Image workflow: every image is a **named slot file** (`public/images/<role>.jpg`). The two sample photos are copied into all 40 slots as placeholders; the owner renames real photos to the slot names and drops them in. List: `public/images/README.md`.
 
-**Principles:** mobile-first (most guests open from WhatsApp on phones), light images and fast load, large tap targets, subtle scroll animations only.
+Original plan, still valid for colours, type and structure:
+
+- Palette, typography (display serif for headings; script for accent words "and", "Together", "of"; wide-tracked small caps for labels), rounded arch photo frames.
+- Mobile-first (most guests open from WhatsApp on phones), light images, large tap targets.
+
+**Structure (home page order):** Hero, Our Journey, photo band (quote), The Wedding, Takeoff Points, Schedule, photo band (save the date), FAQs, photo band (register), Footer. Separate pages: Event Photos, Register, Log in, Reset password, My account, Admin.
 
 ## 6. Tech plan
 

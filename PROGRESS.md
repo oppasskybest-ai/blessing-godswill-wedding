@@ -3,7 +3,7 @@
 Tracks what has been built against the original plan in `docs/PROJECT_NOTES.md` (section numbers below match that file).
 **Read this and PROJECT_NOTES.md at the start of every session, and update the status column as work lands.**
 
-Last updated: 2026-11-19 (session 1; password reset added)
+Last updated: 2026-11-19 (session 2: cinematic redesign, 40 named image slots, new botanicals, schedule overlap fixed)
 
 Legend: DONE = written in code · PLACEHOLDER = built, waiting for real info from the owner · TODO = not built · OPEN = needs a decision
 
@@ -11,8 +11,10 @@ Legend: DONE = written in code · PLACEHOLDER = built, waiting for real info fro
 
 ## Read this first: what has and has not been verified
 
-- The project was written without internet access, so **`npm install` has not been run** and the site has **not been built, started or clicked through**.
-- A TypeScript parse check found **no syntax errors**. A full type check was not possible (no packages installed). Expect a few small type or lint fixes on first `npm run typecheck` / `npm run dev`.
+- The owner ran `npm install` and `npm run dev` in GitHub Codespaces (Next 16.4.6) and the **session-1 front end rendered correctly**. The **session-2 redesign has not been run by anyone yet**; it was written without internet access, so it was never built or looked at.
+- A TypeScript parse check found no syntax errors. A full type check was not possible offline. Expect small fixes on first `npm run dev`.
+- The owner has **not created the Supabase project yet**, so register, login, bus approval, admin and photo upload are still untested.
+- Known harmless warning: "React 18 support is deprecated in Next.js 16". Upgrading to React 19 is optional and not done.
 - `supabase/schema.sql` and `seed.sql` have **not been run** against a real Supabase project. Run them and test the flows in section "First checks" below before trusting the security rules.
 
 ### First checks (do these in order)
@@ -21,6 +23,7 @@ Legend: DONE = written in code · PLACEHOLDER = built, waiting for real info fro
 3. Make yourself admin (see README step 5). As a normal guest, confirm `/admin` redirects away and that no pickup phone number is visible before approval.
 4. Approve a seat in Admin -> Bus requests; confirm the guest now sees the contact; try approving past capacity and confirm it is refused.
 5. Upload a photo in Admin -> Photos; confirm it shows on `/photos`.
+6a. Redesign check (Codespaces): scroll the whole home page on desktop and a phone-sized window. Look for overlapping text, cut-off photos, jerky parallax, and the gallery rows gliding.
 6. Password reset: register, note the recovery code, log out, reset at `/reset-password`, log in with the new password, confirm the old code no longer works. Try 5 wrong codes and confirm the lockout message.
 7. Open the site on a phone-sized screen.
 
@@ -85,14 +88,28 @@ Legend: DONE = written in code · PLACEHOLDER = built, waiting for real info fro
 
 ## 5. Design direction
 
+**Session 2 redesign: "cinematic editorial".** The first version looked flat, so the page was rebuilt around photos and motion. Same palette and fonts, new structure.
+
 | Item | Status | Notes |
 | --- | --- | --- |
 | Palette sampled from the Canva screenshots | DONE | Forest `#3d513c`, cream `#f3dbb9`, aqua `#b1d4e0`, sage `#afaf9b` (`app/globals.css`). |
 | Typography | DONE (approximation) | Bodoni Moda (headings), Pinyon Script (accents), Jost (labels/body). Close to, not identical to, the Canva fonts. |
-| Botanical ornaments | DONE | Original SVG sprig (`components/site/Botanical.tsx`); the Canva illustrations were not copied. |
-| Arch/oval photo frames | DONE | `.arch` in Journey section. |
-| Portrait photos | PLACEHOLDER | Monogram frames until real files are added (`PORTRAITS`). |
-| Section order and mobile-first layout | DONE | Order: Hero, Journey, Wedding, Takeoff, Schedule, FAQs, Footer; Photos and account are separate pages. |
+| Hero: full-screen photo slideshow | DONE (unseen) | 3 slides crossfade with a slow zoom; names rise in line by line; floating arch portrait; frosted-glass countdown. `components/site/Hero.tsx`. |
+| Scroll-parallax photo bands | DONE (unseen) | Quote band, Save-the-date band, Invite (register) band. `Bands.tsx`, `PhotoBand.tsx`, `ParallaxBg.tsx`. |
+| Our Journey: arch portraits + gliding gallery | DONE (unseen) | 3 arch portraits that open on scroll, 3 milestone cards (2018 / 2024 / 2026), two rows of 8 photos gliding in opposite directions, pause on hover. `Journey.tsx`, `GalleryMarquee.tsx`. |
+| Wedding cards with photo headers + attire inspiration row | DONE (unseen) | `Wedding.tsx` |
+| Takeoff Points: photo background + frosted cards | DONE (unseen) | `Pickups.tsx` |
+| Schedule overlap bug | FIXED (unseen) | Heading now sits above a centred vertical timeline whose line fills as you scroll. `Schedule.tsx`, `ScheduleTimeline.tsx`. |
+| FAQs: smooth animated accordion | DONE (unseen) | `Faq.tsx` |
+| Sections slide over each other (rounded "sheet" edges) | DONE (unseen) | `.sheet` / `.section-pad` in `globals.css`. |
+| Nav clear over hero then frosted; scroll-progress line; film grain; button hover lift | DONE (unseen) | `Navbar.tsx`, `ScrollProgress.tsx`, `globals.css`. |
+| Botanical art | DONE | New woodcut-style flowers, leaves and fern fronds, drawn by script (`public/botanical/branch|corner|rose.svg`), drawn in on scroll and gently swaying. Original artwork, not the Canva illustrations. |
+| Imagery on every page | DONE | Register / Log in / Reset have a side arch photo; Event Photos has a banner. |
+| Motion is switched off for "reduce motion" users | DONE | Everything static, gallery becomes scrollable. |
+| Image slots | DONE (placeholders) | 40 files in `public/images/`, all copies of the two sample photos, named by role. Table: `public/images/README.md`. Wiring: `lib/config/images.ts`. |
+| Real portrait / venue / bus photos | PLACEHOLDER | Owner to supply; rename to the slot names and overwrite. |
+
+"unseen" = written and parse-checked in the build session, but not yet looked at in a real browser by me. First thing next session: review screenshots from the Codespace and fix spacing/overlaps.
 
 ## 6. Tech plan
 
@@ -136,3 +153,16 @@ Legend: DONE = written in code · PLACEHOLDER = built, waiting for real info fro
 - Everything unrelated to a wedding: ads, Firebase, newsletters, blog/CMS editor, comments, article and book pages, and the large image folders.
 
 > Heads-up for your other projects: if `richards-site` or `outreachflow-web` are live, the two points above are worth fixing there too.
+
+---
+
+## Session 2 log (2026-11-19): redesign
+
+Owner feedback on the first front end: "too basic, no transitions, not modern; images too small and too few; rose looks basic; schedule overlaps; flood the page with images using the two samples as placeholders named by role."
+
+Done: everything in section 5 above. Also: `data-scroll-behavior="smooth"` added to `<html>` (silences the Next.js warning).
+
+Not done / next:
+- Review the redesign in a browser and tune (likely: image focus positions, spacing, mobile).
+- Real photos: rename to the slot names (see `public/images/README.md`).
+- Supabase project, then the "First checks" list above.

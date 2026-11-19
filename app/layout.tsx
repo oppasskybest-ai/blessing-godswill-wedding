@@ -4,6 +4,7 @@ import './globals.css'
 import { AuthProvider } from '@/lib/auth/AuthProvider'
 import { SITE } from '@/lib/config/site'
 import Navbar from '@/components/site/Navbar'
+import ScrollProgress from '@/components/site/ScrollProgress'
 
 const bodoni = Bodoni_Moda({ subsets: ['latin'], variable: '--font-bodoni', display: 'swap' })
 const pinyon = Pinyon_Script({ subsets: ['latin'], weight: '400', variable: '--font-pinyon', display: 'swap' })
@@ -32,8 +33,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${pinyon.variable} ${jost.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${bodoni.variable} ${pinyon.variable} ${jost.variable}`}>
       <body>
+        <ScrollProgress />
         <AuthProvider>
           <Navbar />
           {children}

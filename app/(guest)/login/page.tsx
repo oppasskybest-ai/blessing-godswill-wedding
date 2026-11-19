@@ -6,6 +6,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import PageShell from '@/components/site/PageShell'
 import NotConfigured from '@/components/site/NotConfigured'
 import Button from '@/components/ui/Button'
+import { IMG } from '@/lib/config/images'
 import { TextField } from '@/components/ui/Field'
 import { useAuth } from '@/lib/auth/AuthProvider'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
@@ -43,7 +44,7 @@ export default function LoginPage() {
   }
 
   return (
-    <PageShell title="Log in" intro="Use the username and password you chose when you registered. No code is needed.">
+    <PageShell title="Log in" image={IMG.loginSide} intro="Use the username and password you chose when you registered. No code is needed.">
       {!isSupabaseConfigured ? (
         <NotConfigured />
       ) : (
